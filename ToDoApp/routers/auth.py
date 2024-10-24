@@ -1,6 +1,9 @@
+import sys
+sys.path.append("..")
+
 import models
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, APIRouter
 from pydantic import BaseModel
 from typing import Optional
 from passlib.context import CryptContext
@@ -16,6 +19,12 @@ SECRET_KEY = "THis is a secret key"
 ALGO = "HS256"
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="token")
+
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"],
+    responses={401: {"user": "Unauthorized"}},
+)
 
 
 def get_db():
@@ -36,8 +45,6 @@ class CreateUser(BaseModel):
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-app = FastAPI()
-
 
 def get_password_hash(password: str) -> str:
     return bcrypt_context.hash(password)
@@ -47,7 +54,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt_context.verify(plain_password, hashed_password)
 
 
-@app.post("/login")
+@router.post("/login")
 async def login(username: str, password: str, db):
     user = db.query(models.User).filter(models.User.username == username).first()
     if not user:
@@ -79,7 +86,7 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
         raise get_user_exception()
 
 
-@app.post("/create_user")
+@router.post("/create_user")
 async def create_user(request: CreateUser, db: Session = Depends(get_db)):
     user_model = models.User(
         email=request.email,
@@ -95,7 +102,7 @@ async def create_user(request: CreateUser, db: Session = Depends(get_db)):
     return user_model
 
 
-@app.post("/token")
+@router.post("/token")
 async def login_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = await login(form_data.username, form_data.password, db)
     if not user:
