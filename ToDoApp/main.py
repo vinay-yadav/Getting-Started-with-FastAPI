@@ -2,7 +2,7 @@ import models
 
 from fastapi import FastAPI, Depends
 from database import engine
-from routers import auth, todos
+from routers import auth, todos, address
 from company import companyapis, dependencies
 
 app = FastAPI()
@@ -15,5 +15,6 @@ app.include_router(
     dependencies=[Depends(dependency=dependencies.get_token_header)],
     responses={404: {"description": "Not found"}},
 )
+app.include_router(address.router)
 
 models.Base.metadata.create_all(bind=engine)
