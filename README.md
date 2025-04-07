@@ -20,5 +20,5 @@ becomes
 ### Current Duration
 ```text
 - Link: https://youtu.be/4h4R7JL-h10?si=vQAXp1p8QHNOrPE9
-- Continue: https://youtu.be/tiBeLLv5GJo?si=51aBjJKS6cZ1fmoD&t=4296
+- Continue: https://youtu.be/tiBeLLv5GJo?si=QGqd04iiTANt9T69&t=4871
 ```
