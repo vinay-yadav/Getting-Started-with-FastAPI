@@ -16,8 +16,8 @@ def read_events() -> EventListSchema:
 
 @router.post("/")
 def create_events(payload: EventCreateSchema) -> EventSchema:
-    print(payload)
-    return {"id": 123}
+    data = payload.model_dump()
+    return {"id": 123, **data}
 
 
 @router.get("/{event_id}")
@@ -29,8 +29,8 @@ def get_event(event_id: int) -> EventSchema:
 @router.put("/{event_id}")
 def update_event(event_id: int, payload: EventUpdateSchema) -> EventSchema:
     # a single row
-    print(payload)
-    return {"id": event_id}
+    data = payload.model_dump()
+    return {"id": event_id, **data}
 
 
 @router.delete("/{event_id}")
