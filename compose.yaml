@@ -4,11 +4,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.web
-    environment:
-      - PORT=8002
-      - DATABASE_URL=postgresql+psycopg://time-user:time-pw@db_service:5432/timescaledb
+#    environment:
+#      - PORT=8002
+#      - DATABASE_URL=postgresql+psycopg://time-user:time-pw@db_service:5432/timescaledb
     env_file:
-      - .env
+      - .env.compose
     ports:
       # - HOST_PORT:CONTAINER_PORT
       - "8002:8002"

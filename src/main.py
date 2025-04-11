@@ -1,10 +1,20 @@
 from typing import Union
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
 from api.events import router as event_router
+from api.db.session import init_db
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # before app startup
+    init_db()
+    yield
+    # clean up
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(event_router, prefix="/api/events")
 
 # api/events
